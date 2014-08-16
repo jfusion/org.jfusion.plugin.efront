@@ -52,7 +52,7 @@ class Admin extends \JFusion\Plugin\Admin
      */
     function setupFromPath($softwarePath)
     {
-	    $myfile = $softwarePath . 'libraries' . DIRECTORY_SEPARATOR . 'configuration.php';
+	    $myfile = $softwarePath . 'libraries/configuration.php';
 
         $params = array();
 	    $lines = $this->readFile($myfile);
@@ -70,7 +70,7 @@ class Admin extends \JFusion\Plugin\Admin
 	        }
 
 
-	        $myfile = $softwarePath . 'libraries' . DIRECTORY_SEPARATOR . 'globals.php';
+	        $myfile = $softwarePath . 'libraries/globals.php';
 
             // this are now predefined in globals.php during efront startup, so let's start with them as well
             define("G_MD5KEY", 'cDWQR#$Rcxsc');
