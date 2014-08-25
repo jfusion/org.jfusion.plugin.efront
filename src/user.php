@@ -56,7 +56,7 @@ class User extends \JFusion\Plugin\User
 		    $query = $db->getQuery(true)
 			    ->select('*, id as userid, login as username')
 			    ->from('#__users')
-			    ->where($identifier_type . ' = ' . $db->quote($identifier));
+			    ->where($db->quoteName($identifier_type) . ' = ' . $db->quote($identifier));
 
 	        $db->setQuery($query);
 	        $result = $db->loadObject();
@@ -580,7 +580,7 @@ class User extends \JFusion\Plugin\User
 			    ->update('#__users')
 			    ->set('user_type =' . $db->quote($user_type))
 			    ->set('user_types_ID =' . $db->quote($user_types_ID))
-			    ->where('id =' . (int)$existinguser->userid);
+			    ->where('id = ' . (int)$existinguser->userid);
 
 		    $db->setQuery($query);
 		    $db->execute();
