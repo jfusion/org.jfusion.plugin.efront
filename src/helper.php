@@ -65,29 +65,29 @@ class Helper extends Plugin
      * @return int
      */
     function groupNameToID($user_type, $user_types_ID) {
-        $group_id = 0;
+        $groupid = 0;
         if ($user_types_ID == 0) {
             switch ($user_type) {
-                case 'professor': 
-                    $group_id = 1;
+                case 'professor':
+	                $groupid = 1;
                     break;
-                case 'administrator': 
-                    $group_id = 2;
+                case 'administrator':
+	                $groupid = 2;
                     break;
            }    
         } else {
-            $group_id = $user_types_ID+2;
+	        $groupid = $user_types_ID+2;
         }
-        return $group_id;
+        return $groupid;
     }
 
     /**
-     * @param $group_id
+     * @param $groupid
      *
      * @return bool|string
      */
-    function groupIdToName ($group_id) {
-        switch ($group_id){
+    function groupIdToName ($groupid) {
+        switch ($groupid){
            case 0: return 'student';
            case 1: return 'professor';
            case 2: return 'administrator';
@@ -95,13 +95,13 @@ class Helper extends Plugin
 
 	    try {
 		    // correct id
-		    $group_id = $group_id - 2;
+		    $groupid = $groupid - 2;
 		    $db = Factory::getDatabase($this->getJname());
 		    if (!empty($db)) {
 			    $query = $db->getQuery(true)
 				    ->select('name, basic_user_type')
 				    ->from('#__user_types')
-				    ->where('id = ' . $db->quote($group_id));
+				    ->where('id = ' . $db->quote($groupid));
 
 			    $db->setQuery($query);
 			    $user_type = (array)$db->loadObject();

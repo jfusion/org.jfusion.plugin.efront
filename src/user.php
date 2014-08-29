@@ -62,11 +62,8 @@ class User extends \JFusion\Plugin\User
 	        $result = $db->loadObject();
 	        if ($result) {
 	            // change/add fields used by jFusion
-	            $result->group_id = $this->helper->groupNameToID($result->user_type, $result->user_types_ID);
-	            $result->group_name = $this->helper->groupIdToName($result->group_id);
-
-	            $result->groups = array($result->group_id);
-	            $result->groupnames = array($result->group_name);
+	            $result->groups = array($this->helper->groupNameToID($result->user_type, $result->user_types_ID));
+	            $result->groupnames = array($this->helper->groupIdToName($result->group_id));
 
 	            $result->name = trim($result->name . ' ' . $result->surname);
 	            $result->registerDate = date('d-m-Y H:i:s', $result->timestamp);
