@@ -54,7 +54,7 @@ class User extends \JFusion\Plugin\User
 
 	        //initialise some params
 		    $query = $db->getQuery(true)
-			    ->select('*, id as userid, login as username')
+			    ->select('*, id as userid, login as username, group_id as groupid')
 			    ->from('#__users')
 			    ->where($db->quoteName($identifier_type) . ' = ' . $db->quote($identifier));
 
@@ -63,7 +63,7 @@ class User extends \JFusion\Plugin\User
 	        if ($result) {
 	            // change/add fields used by jFusion
 	            $result->groups = array($this->helper->groupNameToID($result->user_type, $result->user_types_ID));
-	            $result->groupnames = array($this->helper->groupIdToName($result->group_id));
+	            $result->groupnames = array($this->helper->groupIdToName($result->groupid));
 
 	            $result->name = trim($result->name . ' ' . $result->surname);
 	            $result->registerDate = date('d-m-Y H:i:s', $result->timestamp);
