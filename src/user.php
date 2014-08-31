@@ -150,53 +150,44 @@ class User extends \JFusion\Plugin\User
      */
     function createSession(Userinfo $userinfo, $options) {
         $status = array('error' => array(), 'debug' => array());
-                try {
-                    //do not create sessions for blocked users
-                    if (!empty($userinfo->block) || !empty($userinfo->activation)) {
-                        throw new RuntimeException(Text::_('FUSION_BLOCKED_USER'));
-                    } else {
-                        //get cookiedomain, cookiepath
-                        $db = Factory::getDatabase($this->getJname());
-                         $cookiedomain = $this->params->get('cookie_domain', '');
-                         $cookiepath = $this->params->get('cookie_path', '/');
-                         $httponly = $this->params->get('httponly', 0);
-                         $secure = $this->params->get('secure', false);
 
-                        $query = $db->getQuery(true)
-                            ->select('password')
-                            ->from('#__users')
-                            ->where('login = ' . $db->quote($userinfo->username));
+	    //get cookiedomain, cookiepath
+	    $db = Factory::getDatabase($this->getJname());
+	    $cookiedomain = $this->params->get('cookie_domain', '');
+	    $cookiepath = $this->params->get('cookie_path', '/');
+	    $httponly = $this->params->get('httponly', 0);
+	    $secure = $this->params->get('secure', false);
 
-                        $db->setQuery($query);
-                        $user = $db->loadObject();
-                        // Set cookie values
-                        $query = $db->getQuery(true)
-                            ->select('value')
-                            ->from('#__configuration')
-                            ->where('name = ' . $db->quote('autologout_time'));
+	    $query = $db->getQuery(true)
+		    ->select('password')
+		    ->from('#__users')
+		    ->where('login = ' . $db->quote($userinfo->username));
 
-                        $db->setQuery($query);
-                        $autologout_time = $db->loadResult(); // this is in minutes
-                        $expires = 60 * $autologout_time; // converted to seconds
-                        // correct for remember me option
-                        if (isset($options['remember'])) {
-                            if ($options['remember']) {
-                                // Make the cookie expire in a years time
-                                $expires = 60 * 60 * 24 * 365;
-                            }
-                        }
-                        $name = 'cookie_login';
-                        $value = $userinfo->username;
-                        $status[LogLevel::DEBUG][] = $this->addCookie($name, $value, $expires, $cookiepath, $cookiedomain, $secure, $httponly);
+	    $db->setQuery($query);
+	    $user = $db->loadObject();
+	    // Set cookie values
+	    $query = $db->getQuery(true)
+		    ->select('value')
+		    ->from('#__configuration')
+		    ->where('name = ' . $db->quote('autologout_time'));
 
-                        $name = 'cookie_password';
-                        $value = $user->password;
-                        $status[LogLevel::DEBUG][] = $this->addCookie($name, $value, $expires, $cookiepath, $cookiedomain, $secure, $httponly);
-                    }
-                } catch (Exception $e) {
-                    $status[LogLevel::ERROR][] = $e->getMessage();
-                }
+	    $db->setQuery($query);
+	    $autologout_time = $db->loadResult(); // this is in minutes
+	    $expires = 60 * $autologout_time; // converted to seconds
+	    // correct for remember me option
+	    if (isset($options['remember'])) {
+		    if ($options['remember']) {
+			    // Make the cookie expire in a years time
+			    $expires = 60 * 60 * 24 * 365;
+		    }
+	    }
+	    $name = 'cookie_login';
+	    $value = $userinfo->username;
+	    $status[LogLevel::DEBUG][] = $this->addCookie($name, $value, $expires, $cookiepath, $cookiedomain, $secure, $httponly);
 
+	    $name = 'cookie_password';
+	    $value = $user->password;
+	    $status[LogLevel::DEBUG][] = $this->addCookie($name, $value, $expires, $cookiepath, $cookiedomain, $secure, $httponly);
         return $status;
     }
 
