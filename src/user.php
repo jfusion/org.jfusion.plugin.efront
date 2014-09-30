@@ -48,9 +48,6 @@ class User extends \JFusion\Plugin\User
 	        $db = Factory::getDatabase($this->getJname());
 	        //get the identifier
 	        list($identifier_type, $identifier) = $this->getUserIdentifier($userinfo, 'login', 'email', 'id');
-	        if ($identifier_type == 'login') {
-	            $identifier = $this->filterUsername($identifier);
-	        }
 
 	        //initialise some params
 		    $query = $db->getQuery(true)
@@ -204,6 +201,23 @@ class User extends \JFusion\Plugin\User
     	return $username;
     }
 
+	/**
+	 * used to validate if a user can be created or not
+	 * should throw exception if user can't be created with info about the error.
+	 *
+	 * @param $userinfo
+	 *
+	 * @return boolean
+	 */
+	function validateUser(Userinfo $userinfo)
+	{
+		$username = $this->filterUsername($userinfo->username);
+		if ($username !== $userinfo->username) {
+			throw new RuntimeException('Has Invalid Character: ' . $userinfo->username . ' vs ' . $username);
+		}
+		return true;
+	}
+
     /**
      * @param Userinfo $userinfo
      * @param Userinfo $existinguser
@@ -351,7 +365,7 @@ class User extends \JFusion\Plugin\User
 	    //prepare the variables
 	    $user = new stdClass;
 	    $user->id = null;
-	    $user->login = $this->filterUsername($userinfo->username);
+	    $user->login = $userinfo->username;
 	    $parts = explode(' ', $userinfo->name);
 	    $user->name = trim($parts[0]);
 	    if (count($parts) > 1) {
