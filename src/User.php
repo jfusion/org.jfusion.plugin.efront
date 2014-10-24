@@ -213,7 +213,7 @@ class User extends \JFusion\Plugin\User
 	{
 		$username = $this->filterUsername($userinfo->username);
 		if ($username !== $userinfo->username) {
-			throw new RuntimeException('Has Invalid Character: ' . $userinfo->username . ' vs ' . $username);
+			throw new RuntimeException('Username Has Invalid Character: ' . $userinfo->username . ' vs ' . $username);
 		}
 		return true;
 	}
@@ -508,7 +508,7 @@ class User extends \JFusion\Plugin\User
 
 		    $result = $this->helper->sendToApi($curl_options);
 
-		    $token = $result->token;
+		    $token = (string)$result->token;
 		    // login
 		    $curl_options['action'] = 'login';
 		    $curl_options['parms'] = '&token=' . $token . '&username=' . $apiuser . '&password=' . $apikey;
